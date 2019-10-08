@@ -25,7 +25,8 @@ namespace CQ_Json
                    "此命令将扫描 源文件目录 中所有CPP文件,\n" +
                    "并提取包含信息内容的宏,用于生成JSON,\n" +
                    "随后将app.dll以及app.json复制至<酷Q/dev/APP_ID/>目录,\n" +
-                   "请查看CQ_APP项目相关源文件了解更多相关内容";
+                   "请查看CQ_APP项目相关源文件了解更多相关内容\n" +
+                   "特别注意,目录必须斜线(\\)结尾";
                 if (args.Length == 0
                     || args[0] == "/?"
                     || args[0] == "?"
@@ -45,7 +46,7 @@ namespace CQ_Json
 
                 if (args.Length > 0)
                 {
-                    if (Directory.Exists(args[0])) { srcDir = Path.GetDirectoryName(args[0]); }
+                    if (Directory.Exists(args[0])) { srcDir = Path.GetDirectoryName(args[0]+"\\"); }
                     else { Console.WriteLine("源文件目录不存在."); return; }
                 }
                 else { Console.WriteLine("未指定源文件目录."); return; }
@@ -57,12 +58,12 @@ namespace CQ_Json
                         try { Directory.CreateDirectory(args[1]); }
                         catch { Console.WriteLine("生成目录不存在且无法生成."); return; }
                     }
-                    outPutDir = Path.GetDirectoryName(args[1]);
+                    outPutDir = Path.GetDirectoryName(args[1] + "\\");
                     appJsonFile = Path.Combine(outPutDir, @"app.json");
                 }
                 else { Console.WriteLine("未指定生成文件目录."); return; }
 
-                if (args.Length > 2) { CQ_DIR = Path.GetDirectoryName(args[2]); }
+                if (args.Length > 2) { CQ_DIR = Path.GetDirectoryName(args[2] + "\\"); }
             }
             //解析文件
             try
@@ -96,7 +97,21 @@ namespace CQ_Json
                         Console.WriteLine("源文件读入失败:" + file.FullName); return;
                     }
                 }
-                outw.Write(JsonConvert.SerializeObject(app));
+
+                //格式化输出
+                JsonSerializer serializer = new JsonSerializer();
+                StringWriter textWriter = new StringWriter();
+                JsonTextWriter jsonWriter = new JsonTextWriter(textWriter)
+                {
+                    Formatting = Formatting.Indented,
+                    Indentation = 4,
+                    IndentChar = ' '
+                };
+                serializer.Serialize(jsonWriter, app);
+
+
+                //JsonConvert.SerializeObject(app);
+                outw.Write(textWriter.ToString());
                 outw.Close();
                 Console.WriteLine("酷QJSON构建成功.");
             }
@@ -249,8 +264,8 @@ namespace CQ_Json
                 var s1 = line.IndexOf("//");
                 var s2 = line.IndexOf("{");
 
-                //if (s1 == 0) ;//开头就是注释,直接跳过
-                if (s1 > 0) { if (0 <= s2 && s2 < s1) break; }//如果存在//,则判断{是否在//前面
+                if (s1 == 0) ;//开头就是注释,直接跳过
+                else if (s1 > 0) { if (0 <= s2 && s2 < s1) break; }//如果存在//,则判断{是否在//前面
                 else if (s2 >= 0) break;//如果不存在//,直接判断是否存在{
 
                 if (line.StartsWith("//name:"))
@@ -268,11 +283,13 @@ namespace CQ_Json
                     {
                         var key = line.Substring("//regex-key:".Length);
                         reg.key.Add(key);
+                        Console.WriteLine("发现正则key:"+ key);
                     }
                     else if (line.StartsWith("//regex-expression:"))
                     {
                         var expression = line.Substring("//regex-expression:".Length);
                         reg.expression.Add(expression);
+                        Console.WriteLine("发现正则expression:" + expression);
                     }
                 }
             }
@@ -283,6 +300,7 @@ namespace CQ_Json
             else
             {
                 app._event.Add(new CQevent(id: EveId++, type: Type, name: name, function: function, priority: priority, regex: reg));
+                Console.WriteLine("合入正则");
             }
         }
         private static void addMenu()
@@ -499,7 +517,7 @@ namespace CQ_Json
             {
                 string[] args1 = new string[]
                 {
-                    @"Z:\CQSDK\CQ_TEST\",
+                    @"Z:\CQAPP\CQ_APP\",
                     @"C:\1\testout\"
                 };
 
