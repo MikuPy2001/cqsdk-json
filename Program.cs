@@ -4,6 +4,10 @@ using System.Collections.Generic;
 using System.IO;
 using System.Text;
 
+//关于未能找到Newtonsoft的解决方案
+//点击工具-NuGet包管理器-管理解决方案的NuGet程序包
+//卸载Newtonsoft.Json并重新安装
+
 namespace CQ_Json
 {
     class Program
