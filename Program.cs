@@ -141,13 +141,10 @@ namespace CQ_Json
                         try { File.Delete(CQ_JSON); } catch { Console.WriteLine("删除JSON失败:" + CQ_JSON); }
 
                         Console.WriteLine("复制DLL:" + dlloutfile + "->" + CQ_DLL);
-                        try
-                        { File.Copy(dlloutfile, CQ_DLL); }
-                        catch { Console.WriteLine("dll未能复制到酷Q应用目录."); }
+                        try { File.Copy(dlloutfile, CQ_DLL); } catch { Console.WriteLine("dll未能复制到酷Q应用目录."); }
 
                         Console.WriteLine("复制JSON:" + appJsonFile + "->" + CQ_JSON);
-                        try { File.Copy(appJsonFile, CQ_JSON); }
-                        catch { Console.WriteLine("json未能复制到酷Q应用目录."); }
+                        try { File.Copy(appJsonFile, CQ_JSON); } catch { Console.WriteLine("json未能复制到酷Q应用目录."); }
                     }
                     else { Console.WriteLine("酷Q目录无法识别,将不会复制"); }
                 }
@@ -210,7 +207,12 @@ namespace CQ_Json
                     }
                     catch (Exception) { }
                 }
-                else if (line.StartsWith("#define CQ_DIR ")) { CQ_DIR = Path.GetDirectoryName( 取引号文本_贪婪(line)); }
+                else if (line.StartsWith("#define CQ_DIR "))
+                {
+                    Console.WriteLine("调试(line):" + line);
+                    CQ_DIR = 取引号文本_贪婪(line);
+                    Console.WriteLine("调试(CQ_DIR):" + CQ_DIR);
+                }
 
                 //事件
                 else if (line.StartsWith("EVE_Startup")) { addEVE(1001); }
@@ -529,6 +531,16 @@ namespace CQ_Json
                 Console.WriteLine(output);
                 Console.ReadLine();
 
+            }
+        }
+        class TestMain2
+        {
+            static void Main(string[] args)
+            {
+                Console.WriteLine("---------------------");
+                Console.WriteLine(取引号文本_贪婪("#define CQ_DIR \"Y:\\\\\""));
+                Console.WriteLine("---------------------");
+                Console.ReadLine();
             }
         }
     }
