@@ -129,14 +129,14 @@ namespace CQ_Json
                     Console.WriteLine("应用ID为:" + APP_ID);
                     if (Directory.Exists(CQ_DIR))
                     {
-                        string CQ_DEBDIR = Path.Combine(new string[] { CQ_DIR, @"dev", APP_ID });
-                        string CQ_DLL = Path.Combine(new string[] { CQ_DEBDIR, @"app.dll" });
-                        string CQ_JSON = Path.Combine(new string[] { CQ_DEBDIR, @"app.json" });
+                        string CQ_DEVDIR = Path.Combine(new string[] { CQ_DIR, @"dev", APP_ID });
+                        string CQ_DLL = Path.Combine(new string[] { CQ_DEVDIR, @"app.dll" });
+                        string CQ_JSON = Path.Combine(new string[] { CQ_DEVDIR, @"app.json" });
 
                         //检查目录是否存在
-                        if (!Directory.Exists(CQ_DEBDIR))
+                        if (!Directory.Exists(CQ_DEVDIR))
                         {
-                            try { Console.WriteLine("酷Q应用目录创建:" + Directory.CreateDirectory(CQ_DEBDIR)); }
+                            try { Console.WriteLine("酷Q应用目录创建:" + Directory.CreateDirectory(CQ_DEVDIR)); }
                             catch { Console.WriteLine("酷Q应用目录不存在且无法生成."); return; }
                         }
                         string dlloutfile = Path.Combine(outPutDir, @"app.dll");
@@ -150,7 +150,7 @@ namespace CQ_Json
                         Console.WriteLine("复制JSON:" + appJsonFile + "->" + CQ_JSON);
                         try { File.Copy(appJsonFile, CQ_JSON); } catch { Console.WriteLine("json未能复制到酷Q应用目录."); }
                     }
-                    else { Console.WriteLine("酷Q目录无法识别,将不会复制"); }
+                    else { Console.WriteLine("酷Q目录不合法或不存在,将不会复制"); }
                 }
                 else { Console.WriteLine("未扫描到应用ID,将不会复制"); }
             }
@@ -213,9 +213,9 @@ namespace CQ_Json
                 }
                 else if (line.StartsWith("#define CQ_DIR "))
                 {
-                    Console.WriteLine("调试(line):" + line);
+                    //Console.WriteLine("调试(line):" + line);
                     CQ_DIR = 取引号文本_贪婪(line);
-                    Console.WriteLine("调试(CQ_DIR):" + CQ_DIR);
+                    //Console.WriteLine("调试(CQ_DIR):" + CQ_DIR);
                 }
 
                 //事件
@@ -499,9 +499,9 @@ namespace CQ_Json
                 j._event.Add(new CQevent(2, 1002, "mmm", "fun2", 30000));
 
                 CQregex r = new CQregex();
-                r.key.Add("QQ");
+                r.key.Add("Account");
                 r.key.Add("action");
-                r.expression.Add("^(?<action>\\S{1,4}?)\\s*(?<qq>\\d{5,10})\\s*?$");
+                r.expression.Add("^(?<action>\\S{1,4}?)\\s*(?<Account>\\d{5,10})\\s*?$");
 
                 j._event[1].regex = r;
 
