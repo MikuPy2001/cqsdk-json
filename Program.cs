@@ -198,7 +198,9 @@ namespace CQ_Json
                 else if (line.StartsWith("#define APP_ID ")) {
                     APP_ID = 取引号文本_贪婪(line); }
                 else if (line.StartsWith("#define APP_description ")) {
-                    app.description = 取引号文本_贪婪(line); }
+                    app.description = 取引号文本_贪婪(line);
+                    app.description = app.description.Replace("\\n", "\n");
+                }
                 else if (line.StartsWith("#define APP_version ")) {
                     app.version = 取引号文本_贪婪(line); }
                 else if (line.StartsWith("#define APP_version_id "))
@@ -289,24 +291,25 @@ namespace CQ_Json
                     {
                         var key = line.Substring("//regex-key:".Length);
                         reg.key.Add(key);
-                        Console.WriteLine("发现正则key:"+ key);
+                        //Console.WriteLine("发现正则key:"+ key);
                     }
                     else if (line.StartsWith("//regex-expression:"))
                     {
                         var expression = line.Substring("//regex-expression:".Length);
                         reg.expression.Add(expression);
-                        Console.WriteLine("发现正则expression:" + expression);
+                        //Console.WriteLine("发现正则expression:" + expression);
                     }
                 }
             }
             if (reg.expression.Count == 0)
             {
                 app._event.Add(new CQevent(id: EveId++, type: Type, name: name, function: function, priority: priority));
+                if(reg.key.Count != 0) Console.WriteLine("[提示]空正则KEY,将被忽略,事件函数名为: " + function);
             }
             else
             {
                 app._event.Add(new CQevent(id: EveId++, type: Type, name: name, function: function, priority: priority, regex: reg));
-                Console.WriteLine("合入正则");
+                //Console.WriteLine("合入正则");
             }
         }
         private static void addMenu()
