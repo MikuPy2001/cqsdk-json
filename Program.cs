@@ -199,7 +199,7 @@ namespace CQ_Json
                     APP_ID = 取引号文本_贪婪(line); }
                 else if (line.StartsWith("#define APP_description ")) {
                     app.description = 取引号文本_贪婪(line);
-                    app.description = app.description.Replace("\\n", "\n");
+                    app.description = app.description.Replace(@"\r\n", @"\n").Replace(@"\n", @"\r\n");
                 }
                 else if (line.StartsWith("#define APP_version ")) {
                     app.version = 取引号文本_贪婪(line); }
