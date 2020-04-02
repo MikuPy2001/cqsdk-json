@@ -199,7 +199,7 @@ namespace CQ_Json
                     APP_ID = 取引号文本_贪婪(line); }
                 else if (line.StartsWith("#define APP_description ")) {
                     app.description = 取引号文本_贪婪(line);
-                    app.description = app.description.Replace(@"\r\n", @"\n").Replace(@"\n", @"\r\n");
+                    app.description = app.description.Replace(@"\r\n", @"\n").Replace(@"\n", "\r\n");
                 }
                 else if (line.StartsWith("#define APP_version ")) {
                     app.version = 取引号文本_贪婪(line); }
@@ -235,6 +235,7 @@ namespace CQ_Json
                 else if (line.StartsWith("EVE_GroupUpload")) { addEVE(11); }
                 else if (line.StartsWith("EVE_System_GroupMemberDecrease")) { addEVE(102); }
                 else if (line.StartsWith("EVE_System_GroupMemberIncrease")) { addEVE(103); }
+                else if (line.StartsWith("EVE_System_GroupBan")) { addEVE(104); }
                 //菜单和悬浮窗
                 else if (line.StartsWith("EVE_Menu")) { addMenu(); }
                 else if (line.StartsWith("EVE_Status")) { addStatus(); }
