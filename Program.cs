@@ -273,9 +273,12 @@ namespace CQ_Json
                 var s1 = line.IndexOf("//");
                 var s2 = line.IndexOf("{");
 
-                if (s1 == 0) ;//开头就是注释,直接跳过
-                else if (s1 > 0) { if (0 <= s2 && s2 < s1) break; }//如果存在//,则判断{是否在//前面
-                else if (s2 >= 0) break;//如果不存在//,直接判断是否存在{
+                //判断大括号和双斜杠
+                if (s1 != 0)//双斜杠开头,正常继续
+                {
+                    if (s1 > 0) { if (0 <= s2 && s2 < s1) break; }//大括号在双斜杠前面,结束判断
+                    else if (s2 >= 0) break;//存在大括号,结束判断
+                }
 
                 if (line.StartsWith("//name:"))
                 {
